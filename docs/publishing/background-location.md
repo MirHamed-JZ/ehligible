@@ -22,7 +22,8 @@ Everything is behind one build switch, so v1.0 builds never contain the permissi
 
 ## Shipping v1.1
 
-1. In `gradle.properties` set `ehligible.versionName=1.1.0` and `ehligible.backgroundLocation=true`.
+1. In `gradle.properties` set `ehligible.versionName=1.1.0`, raise `ehligible.versionCode` by one, and set
+   `ehligible.backgroundLocation=true`.
 2. Replace the release notes in `distribution/whatsnew/` and `androidApp/src/main/play/release-notes/`
    with the texts below.
 3. Update the store listing description (below). Google requires the background feature to be "prominently
