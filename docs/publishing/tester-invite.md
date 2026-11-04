@@ -3,7 +3,7 @@
 Two messages to ~15 friends with Android phones (Google requires 12 testers who stay opted in for 14 days in a
 row): a heads-up now to collect their emails, then the invitation once the closed test exists.
 
-## 1. Heads-up (while the developer account is being verified)
+## 1. Heads-up (to collect their emails)
 
 **English**
 
@@ -20,9 +20,10 @@ demande qu'une quinzaine de personnes la testent pendant deux semaines. Pourrais
 et ça prend quelques minutes. Si oui, envoie-moi l'adresse du compte Google que tu utilises pour le Play Store sur
 ton téléphone Android. Je t'enverrai un lien dans quelques jours.
 
-## 2. Invitation (once the closed test is approved)
+## 2. Invitation (the closed test is live since 2026-11-03)
 
-Replace `<OPT-IN LINK>` with the link from Play Console → Closed testing → Testers.
+The link only works for emails on the tester list, so add each person first: Play Console → Closed testing →
+*Closed testing - Alpha* → **Testers** tab → the arrow next to *Eh-ligible testers* → add the emails → Save.
 
 ---
 
@@ -34,9 +35,11 @@ the phone).
 
 Google needs a few people to test it for two weeks before it can go public. Could you help?
 
-1. Open this link on your Android phone and tap **Become a tester**: `<OPT-IN LINK>`
+1. On your Android phone, open https://play.google.com/apps/testing/ca.ehligible and tap **Become a tester**.
 2. Install Eh-ligible from the Play Store page it shows.
 3. Keep it installed for **14 days**. You don't need to be a PR; any date works for trying it.
+
+If the link says the app isn't available, check that you're signed in with the Google account you sent me.
 
 What to try (10 minutes): https://github.com/ehligible/ehligible/blob/main/docs/testing/device-checklist.md
 
@@ -52,9 +55,13 @@ remarque les voyages à l'étranger toute seule (en privé, sur le téléphone).
 
 Google demande que quelques personnes la testent pendant deux semaines avant la publication. Pourrais-tu m'aider?
 
-1. Ouvre ce lien sur ton téléphone Android et touche **Devenir testeur** : `<OPT-IN LINK>`
+1. Sur ton téléphone Android, ouvre https://play.google.com/apps/testing/ca.ehligible et touche
+   **Devenir testeur**.
 2. Installe Eh-ligible depuis la page Play Store qui s'affiche.
 3. Garde-la installée pendant **14 jours**. Pas besoin d'être RP : n'importe quelle date permet de l'essayer.
+
+Si le lien dit que l'application n'est pas disponible, vérifie que ton téléphone utilise le compte Google que tu
+m'as envoyé.
 
 Quoi essayer (10 minutes, en anglais) : https://github.com/ehligible/ehligible/blob/main/docs/testing/device-checklist.md
 

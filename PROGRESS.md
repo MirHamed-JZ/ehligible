@@ -30,14 +30,14 @@ Checkpoint for resuming work (e.g., after a usage limit). Update at the end of e
 - [ ] M10 Real-device test on the owner's Android phone (needs the owner)
 
 ## Current step
-Google Play: the app exists in Play Console (account "Hamed JZ", package `ca.ehligible`). Done on 2026-10-31, by
-Claude in the owner's Chrome with the owner approving each legal step: store listing EN + FR, store settings, all
-app content declarations, closed test "Closed testing - Alpha" (Canada; email list "Eh-ligible testers" with the
-owner's 2 addresses; feedback to jafarzadeh.mirhamed@gmail.com) with release 1.0.0 (version code 1) from
-`C:\DevProjects\ehligible-release\1.0.0\`. **Submitted for review 2026-10-31** (up to ~7 days).
-Next: when approved, copy the opt-in link (closed track → Testers) into `docs/publishing/tester-invite.md`
-message 2, add testers' emails to the list, and start the 14 days. Play's only warning: no native debug symbols
-(DataStore's small native library); harmless.
+Google Play closed test is **live**: release 1.0.0 (version code 1) approved and published 2026-11-03 on
+"Closed testing - Alpha" (Canada). Set up 2026-10-31 by Claude in the owner's Chrome (account "Hamed JZ",
+package `ca.ehligible`), the owner approving each legal step. Opt-in link:
+https://play.google.com/apps/testing/ca.ehligible (works only for emails on the "Eh-ligible testers" list, which
+has the owner's 2 addresses so far). Next: collect ~15 testers' emails, add them to the list, send message 2 of
+`docs/publishing/tester-invite.md`; after 14 days with at least 12 opted in, apply for production.
+Play notices: "no native debug symbols" (DataStore's small native library; harmless), and since 2026-11-04
+"androidx.fragment 1.1.0 is outdated" (Play services still ask for it; 1.0.1 pins a current one).
 
 ## Usage limits (owner asked to resume right after a reset)
 - Built-in `autoContinueAtUsageLimit` is on (~/.claude/settings.json); it resumes after a reset if this window
@@ -62,9 +62,10 @@ message 2, add testers' emails to the list, and start the 14 days. Play's only w
 
 ## Waiting on the owner
 1. ~~Back up the upload key~~ (done) and ~~create the Play account and app~~ (done, verified 2026-10-31).
-2. Wait for Google's review of the closed test, then send testers the opt-in link.
-3. Add the three signing secrets to `ehligible/ehligible` so tagged releases build signed bundles.
-4. Closed test with ~15 testers for 14 days (`docs/publishing/tester-invite.md`), then apply for production.
+2. Collect ~15 testers' emails (heads-up message), add them to the tester list (or send them to Claude), then
+   send the invitation with the opt-in link; 14 days with at least 12 opted in, then apply for production.
+3. Declare trader status in Play Console by February 2027 (Account details → About you → *Declare status*).
+4. Add the three signing secrets to `ehligible/ehligible` so tagged releases build signed bundles.
 5. Connect the Android phone with USB debugging (M10).
 6. When v1.1 ships: upload the declaration video to YouTube as Unlisted (script in `background-location.md`).
 7. Apple Developer account and a custom domain: later, if the owner decides.

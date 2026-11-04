@@ -31,8 +31,10 @@ release: the first review, then the 14-day closed test, then the production revi
    `jafarzadeh.mirhamed@gmail.com`.
    Your legal name, country and this email are shown on the store page (your address and phone are not, since the
    app is free).
-5. When asked (from November 2026) about **trader status** under the EU Digital Services Act: you are **not a
-   trader** (no money is involved).
+5. **Trader status** (EU Digital Services Act; Account details → About you → *Declare status*): required from
+   every developer **by February 2027**, or the account and its apps are removed from Google Play everywhere.
+   The choice is *trader* or *non-trader*; a free app with no ads, purchases or business behind it fits
+   **non-trader**.
 
 Identity verification can take a few days, so start early.
 
@@ -113,8 +115,10 @@ the listing and release-note texts, and the two `gradle.properties` lines to cha
      `tools/release/sign.sh` (a local `./gradlew :androidApp:bundleRelease` runs out of memory on this PC). Once the
      signing secrets below are set, pushing a tag like `v1.0.1` builds and signs it in CI instead.
    - Release notes: `distribution/whatsnew/whatsnew-en-US` and `whatsnew-fr-CA`.
-5. **Review and roll out.** After Google's review, copy the **opt-in link** from the track's *Testers* tab and send
-   it to your testers. Each tester opens it, accepts, installs, and **stays opted in for 14 days in a row**.
+5. **Review and roll out.** Google approved and published the first release in 3 days (Oct 31 → Nov 3, 2026).
+   The **opt-in link** (track → *Testers* → *Join on the web*) is https://play.google.com/apps/testing/ca.ehligible;
+   it only works for emails on the tester list. Each tester opens it, accepts, installs, and **stays opted in for
+   14 days in a row**.
 
 ## 6. Production
 
