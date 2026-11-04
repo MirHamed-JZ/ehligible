@@ -99,7 +99,7 @@ nothing more. The privacy policy explains device backups.
 
 **Permissions:** v1.0 uses approximate location only while the app is open, so there is no background-location
 declaration yet. That comes with v1.1: `background-location.md` has the declaration answers, the video script,
-the listing and release-note texts, and the two `gradle.properties` lines to change.
+the listing and release-note texts, and the `gradle.properties` lines to change.
 
 ## 5. Closed test (starts the 14-day clock)
 
@@ -119,6 +119,10 @@ the listing and release-note texts, and the two `gradle.properties` lines to cha
    The **opt-in link** (track → *Testers* → *Join on the web*) is https://play.google.com/apps/testing/ca.ehligible;
    it only works for emails on the tester list. Each tester opens it, accepts, installs, and **stays opted in for
    14 days in a row**.
+6. **Updates** (testers get them automatically; the 14 days keep counting): raise `ehligible.versionName` and
+   `ehligible.versionCode` in `gradle.properties`, write the notes in `distribution/whatsnew/` (and the same
+   text in `androidApp/src/main/play/release-notes/`), push to `main`, sign the CI bundle as in step 4, and
+   upload it on the track with **Create new release**. Each update is reviewed again before testers get it.
 
 ## 6. Production
 

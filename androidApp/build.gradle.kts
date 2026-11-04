@@ -32,7 +32,8 @@ android {
         applicationId = "ca.ehligible"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        // CI sets the version code from the run number; local builds use 1.
+        // From gradle.properties (bump it with versionName for every upload); the tag-triggered release
+        // workflow overrides it with 1000 + its run number.
         versionCode = providers.gradleProperty("ehligible.versionCode").map(String::toInt).getOrElse(1)
         versionName = appVersionName
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -113,6 +114,11 @@ dependencies {
     implementation(libs.play.services.location)
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.okio)
+    constraints {
+        implementation(libs.androidx.fragment) {
+            because("Play services ask for fragment 1.1.0, which Play Console flags as outdated")
+        }
+    }
 
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)

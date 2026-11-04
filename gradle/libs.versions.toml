@@ -12,6 +12,8 @@ androidx-core = "1.19.1"
 androidx-glance = "1.2.0"
 androidx-work = "2.12.0"
 androidx-datastore = "1.3.0"
+# Play services still ask for fragment 1.1.0, which Play Console flags as an outdated SDK.
+androidx-fragment = "1.9.1"
 androidx-test-core = "1.7.0"
 androidx-test-ext-junit = "1.3.0"
 androidx-compose-ui-test = "1.12.1"
@@ -51,6 +53,7 @@ androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "
 androidx-work-testing = { module = "androidx.work:work-testing", version.ref = "androidx-work" }
 androidx-datastore-core = { module = "androidx.datastore:datastore-core", version.ref = "androidx-datastore" }
 androidx-datastore-core-okio = { module = "androidx.datastore:datastore-core-okio", version.ref = "androidx-datastore" }
+androidx-fragment = { module = "androidx.fragment:fragment", version.ref = "androidx-fragment" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "play-services-location" }
 
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
