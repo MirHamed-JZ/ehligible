@@ -32,9 +32,10 @@ release: the first review, then the 14-day closed test, then the production revi
    Your legal name, country and this email are shown on the store page (your address and phone are not, since the
    app is free).
 5. **Trader status** (EU Digital Services Act; Account details → About you → *Declare status*): required from
-   every developer **by February 2027**, or the account and its apps are removed from Google Play everywhere.
-   The choice is *trader* or *non-trader*; a free app with no ads, purchases or business behind it fits
-   **non-trader**.
+   every developer by February 1, 2027, or Google can block updates and remove the apps everywhere. **Declared
+   non-trader on 2026-11-04** (one free app, no ads or purchases). It can be changed any time on the same page:
+   if an app starts earning money (paid app, in-app purchases, ads), switch to *trader*. Traders show a phone
+   number and address on Google Play and give a terms-of-service link for each app.
 
 Identity verification can take a few days, so start early.
 

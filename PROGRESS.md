@@ -30,14 +30,17 @@ Checkpoint for resuming work (e.g., after a usage limit). Update at the end of e
 - [ ] M10 Real-device test on the owner's Android phone (needs the owner)
 
 ## Current step
-Google Play closed test is **live**: release 1.0.0 (version code 1) approved and published 2026-11-03 on
-"Closed testing - Alpha" (Canada). Set up 2026-10-31 by Claude in the owner's Chrome (account "Hamed JZ",
-package `ca.ehligible`), the owner approving each legal step. Opt-in link:
+Google Play closed test is **live** on "Closed testing - Alpha" (Canada): 1.0.0 (version code 1) approved and
+published 2026-11-03; **1.0.1 (version code 2) submitted 2026-11-04**, in review. 1.0.1 pins androidx.fragment
+1.9.1 because Play flagged the 1.0.0 one (1.1.0, pulled in by Play services) as an outdated SDK; signed files in
+`C:\DevProjects\ehligible-release\1.0.1\`. Play Console was set up 2026-10-31 by Claude in the owner's Chrome
+(package `ca.ehligible`), the owner approving each legal step. Opt-in link:
 https://play.google.com/apps/testing/ca.ehligible (works only for emails on the "Eh-ligible testers" list, which
 has the owner's 2 addresses so far). Next: collect ~15 testers' emails, add them to the list, send message 2 of
 `docs/publishing/tester-invite.md`; after 14 days with at least 12 opted in, apply for production.
-Play notices: "no native debug symbols" (DataStore's small native library; harmless), and since 2026-11-04
-"androidx.fragment 1.1.0 is outdated" (Play services still ask for it; 1.0.1 pins a current one).
+Account: trader status declared **non-trader** by the owner on 2026-11-04. The public developer name reads
+"mirhamedjz" since 2026-11-04 (it was "Hamed JZ"; to confirm with the owner). Play's remaining warning: no
+native debug symbols (DataStore's small native library; harmless).
 
 ## Usage limits (owner asked to resume right after a reset)
 - Built-in `autoContinueAtUsageLimit` is on (~/.claude/settings.json); it resumes after a reset if this window
@@ -64,11 +67,10 @@ Play notices: "no native debug symbols" (DataStore's small native library; harml
 1. ~~Back up the upload key~~ (done) and ~~create the Play account and app~~ (done, verified 2026-10-31).
 2. Collect ~15 testers' emails (heads-up message), add them to the tester list (or send them to Claude), then
    send the invitation with the opt-in link; 14 days with at least 12 opted in, then apply for production.
-3. Declare trader status in Play Console by February 2027 (Account details → About you → *Declare status*).
-4. Add the three signing secrets to `ehligible/ehligible` so tagged releases build signed bundles.
-5. Connect the Android phone with USB debugging (M10).
-6. When v1.1 ships: upload the declaration video to YouTube as Unlisted (script in `background-location.md`).
-7. Apple Developer account and a custom domain: later, if the owner decides.
+3. Add the three signing secrets to `ehligible/ehligible` so tagged releases build signed bundles.
+4. Connect the Android phone with USB debugging (M10).
+5. When v1.1 ships: upload the declaration video to YouTube as Unlisted (script in `background-location.md`).
+6. Apple Developer account and a custom domain: later, if the owner decides.
 
 ## Notes
 - Toolchain: JDK 17 (`C:\Users\mirha\dev\jdk17`), Android SDK `C:\Users\mirha\dev\android-sdk` (platform 36,
