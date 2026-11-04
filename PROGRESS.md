@@ -38,8 +38,8 @@ published 2026-11-03; **1.0.1 (version code 2) submitted 2026-11-04**, in review
 https://play.google.com/apps/testing/ca.ehligible (works only for emails on the "Eh-ligible testers" list, which
 has the owner's 2 addresses so far). Next: collect ~15 testers' emails, add them to the list, send message 2 of
 `docs/publishing/tester-invite.md`; after 14 days with at least 12 opted in, apply for production.
-Account: trader status declared **non-trader** by the owner on 2026-11-04. The public developer name reads
-"mirhamedjz" since 2026-11-04 (it was "Hamed JZ"; to confirm with the owner). Play's remaining warning: no
+Account: trader status declared **non-trader** by the owner on 2026-11-04. The owner changed the public developer
+name to "mirhamedjz" on 2026-11-04 (it was "Hamed JZ"). Play's remaining warning: no
 native debug symbols (DataStore's small native library; harmless).
 
 ## Usage limits (owner asked to resume right after a reset)
