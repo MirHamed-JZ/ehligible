@@ -71,10 +71,14 @@ data class Settings(
     val notificationsEnabled: Boolean = false,
     /** Ids of ticked "Ready to apply?" items. */
     val checklist: Set<String> = emptySet(),
+    val widgetStyle: WidgetStyle = WidgetStyle.SYSTEM,
+    /** How solid the widget's background is, from 0 (see-through) to 100. Android only: iOS widgets are opaque. */
+    val widgetOpacity: Int = MAX_WIDGET_OPACITY,
 ) {
     companion object {
         const val DEFAULT_MARGIN_DAYS: Int = 7
         const val MAX_MARGIN_DAYS: Int = 60
+        const val MAX_WIDGET_OPACITY: Int = 100
     }
 }
 

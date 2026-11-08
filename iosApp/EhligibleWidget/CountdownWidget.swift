@@ -12,6 +12,7 @@ struct CountdownEntry: TimelineEntry {
     let reviewDays: Int
     /// False before onboarding, when the widget invites the person to open the app.
     let hasSnapshot: Bool
+    var style: WidgetSnapshot.Style = .system
 
     static var sample: CountdownEntry {
         CountdownEntry(
@@ -55,7 +56,8 @@ struct CountdownProvider: TimelineProvider {
                 day: item.day,
                 target: snapshot?.target ?? .exact,
                 reviewDays: snapshot?.reviewDays ?? 0,
-                hasSnapshot: snapshot != nil
+                hasSnapshot: snapshot != nil,
+                style: snapshot?.style ?? .system
             )
         }
         // The app reloads the widget whenever its numbers change; this only covers a snapshot that ran out.
@@ -80,8 +82,10 @@ struct CountdownWidgetView: View {
             Text(verbatim: Texts.inline(entry))
         case .systemMedium:
             MediumView(entry: entry)
+                .widgetStyle(entry.style)
         default:
             SmallView(entry: entry)
+                .widgetStyle(entry.style)
         }
     }
 }
@@ -103,6 +107,7 @@ struct SmallView: View {
 }
 
 struct MediumView: View {
+    @Environment(\.palette) private var palette
     let entry: CountdownEntry
 
     var body: some View {
@@ -116,7 +121,7 @@ struct MediumView: View {
                         // French dates are long ("Demande possible dès le 2 janv. 2028"): shrink, don't wrap.
                         Text(verbatim: line)
                             .font(.caption)
-                            .foregroundStyle(Palette.ink)
+                            .foregroundStyle(palette.ink)
                             .lineLimit(1)
                             .minimumScaleFactor(0.75)
                     }
@@ -130,7 +135,7 @@ struct MediumView: View {
                     if entry.reviewDays > 0 {
                         Text(verbatim: "⚠️ " + Texts.review(entry.reviewDays))
                             .font(.caption2)
-                            .foregroundStyle(Palette.mapleText)
+                            .foregroundStyle(palette.mapleText)
                     }
                 }
                 Spacer(minLength: 0)
@@ -142,6 +147,7 @@ struct MediumView: View {
 }
 
 private struct Headline: View {
+    @Environment(\.palette) private var palette
     let day: WidgetSnapshot.Day
     let numberSize: CGFloat
     let alignment: HorizontalAlignment
@@ -153,23 +159,24 @@ private struct Headline: View {
                     .font(.system(size: numberSize))
                 Text(verbatim: Texts.eligible)
                     .font(.caption.bold())
-                    .foregroundStyle(Palette.ink)
+                    .foregroundStyle(palette.ink)
                     .multilineTextAlignment(alignment == .leading ? .leading : .center)
             } else if let left = day.daysLeft {
                 Text(verbatim: Texts.number(left))
                     .font(.system(size: numberSize, weight: .bold, design: .rounded))
-                    .foregroundStyle(Palette.mapleText)
+                    .foregroundStyle(palette.mapleText)
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
                 Text(verbatim: Texts.daysToGo(left))
                     .font(.caption)
-                    .foregroundStyle(Palette.ink)
+                    .foregroundStyle(palette.ink)
             }
         }
     }
 }
 
 private struct Message: View {
+    @Environment(\.palette) private var palette
     let text: String
 
     var body: some View {
@@ -178,7 +185,7 @@ private struct Message: View {
                 .frame(width: 44, height: 44)
             Text(verbatim: text)
                 .font(.caption)
-                .foregroundStyle(Palette.ink)
+                .foregroundStyle(palette.ink)
                 .multilineTextAlignment(.center)
         }
     }
@@ -243,6 +250,7 @@ struct RectangularView: View {
 
 /// The Eh-ligible leaf filling up inside its ring, drawn like the app and the Android widget.
 struct LeafProgress: View {
+    @Environment(\.palette) private var palette
     let progress: Double
 
     var body: some View {
@@ -254,23 +262,23 @@ struct LeafProgress: View {
             let fraction = min(max(progress, 0), 1)
             ZStack {
                 Circle()
-                    .stroke(Palette.track, lineWidth: ringWidth)
+                    .stroke(palette.track, lineWidth: ringWidth)
                     .frame(width: radius * 2, height: radius * 2)
                 if fraction > 0 {
                     Circle()
                         .trim(from: 0, to: fraction)
                         .stroke(
-                            fraction >= 1 ? Palette.gold : Palette.maple,
+                            fraction >= 1 ? palette.gold : palette.maple,
                             style: StrokeStyle(lineWidth: ringWidth, lineCap: .round)
                         )
                         .rotationEffect(.degrees(-90))
                         .frame(width: radius * 2, height: radius * 2)
                 }
                 ZStack {
-                    RoundedLeaf(color: Palette.leafEmpty, joinWidth: side * 0.03)
+                    RoundedLeaf(color: palette.leafEmpty, joinWidth: side * 0.03)
                     if fraction > 0 {
                         // The water line rises with the leaf, tilted with it (as on Android).
-                        RoundedLeaf(color: Palette.maple, joinWidth: side * 0.03)
+                        RoundedLeaf(color: palette.maple, joinWidth: side * 0.03)
                             .mask(alignment: .bottom) {
                                 Rectangle().frame(height: leafSide * (fraction * 0.97 + 0.01))
                             }
@@ -325,25 +333,128 @@ struct LeafShape: Shape {
 
 // MARK: - Style and text
 
-enum Palette {
-    static let maple = Color(red: 214 / 255, green: 40 / 255, blue: 40 / 255)
-    static let gold = Color(red: 244 / 255, green: 162 / 255, blue: 89 / 255)
-    static let mapleText = dynamic(light: 0xD62828, dark: 0xFF8A80)
-    static let leafEmpty = dynamic(light: 0xF6DCD8, dark: 0x3D2A2B)
-    static let track = dynamic(light: 0xF5DDDA, dark: 0x534341)
-    static let background = dynamic(light: 0xFFF8F5, dark: 0x1A1112)
-    static let ink = dynamic(light: 0x231917, dark: 0xF1DEDC)
+/// The widget's colours for one style (Kotlin's `WidgetColors`: keep the values in step).
+struct Palette {
+    /// The filled leaf and the ring.
+    let maple: Color
+    /// The ring once all the days are in.
+    let gold: Color
+    /// The big number.
+    let mapleText: Color
+    let leafEmpty: Color
+    let track: Color
+    let background: Color
+    let ink: Color
+
+    /// Light or dark like the phone.
+    static let system = Palette(
+        maple: fixed(0xD62828),
+        gold: fixed(0xF4A259),
+        mapleText: dynamic(light: 0xD62828, dark: 0xFF8A80),
+        leafEmpty: dynamic(light: 0xF6DCD8, dark: 0x3D2A2B),
+        track: dynamic(light: 0xF5DDDA, dark: 0x534341),
+        background: dynamic(light: 0xFFF8F5, dark: 0x1A1112),
+        ink: dynamic(light: 0x231917, dark: 0xF1DEDC)
+    )
+
+    static let light = Palette(
+        maple: fixed(0xD62828),
+        gold: fixed(0xF4A259),
+        mapleText: fixed(0xD62828),
+        leafEmpty: fixed(0xF6DCD8),
+        track: fixed(0xF5DDDA),
+        background: fixed(0xFFF8F5),
+        ink: fixed(0x231917)
+    )
+
+    static let dark = Palette(
+        maple: fixed(0xD62828),
+        gold: fixed(0xF4A259),
+        mapleText: fixed(0xFF8A80),
+        leafEmpty: fixed(0x3D2A2B),
+        track: fixed(0x534341),
+        background: fixed(0x1A1112),
+        ink: fixed(0xF1DEDC)
+    )
+
+    /// Red with a white leaf, like the flag.
+    static let mapleRed = Palette(
+        maple: fixed(0xFFFFFF),
+        gold: fixed(0xF4A259),
+        mapleText: fixed(0xFFFFFF),
+        leafEmpty: fixed(0xC8474B),
+        track: fixed(0xC23B40),
+        background: fixed(0xA4161A),
+        ink: fixed(0xFFFFFF)
+    )
+
+    static func of(_ style: WidgetSnapshot.Style) -> Palette {
+        switch style {
+        case .system: return .system
+        case .light: return .light
+        case .dark: return .dark
+        case .maple: return .mapleRed
+        }
+    }
+
+    /// The light or dark look that a fixed style's system colours (such as `.secondary` text) take;
+    /// nil to follow the phone.
+    static func colorScheme(for style: WidgetSnapshot.Style) -> ColorScheme? {
+        switch style {
+        case .system: return nil
+        case .light: return .light
+        case .dark, .maple: return .dark
+        }
+    }
+
+    private static func fixed(_ rgb: Int) -> Color {
+        Color(uiColor(rgb))
+    }
 
     private static func dynamic(light: Int, dark: Int) -> Color {
-        Color(UIColor { traits in
-            let rgb = traits.userInterfaceStyle == .dark ? dark : light
-            return UIColor(
-                red: CGFloat((rgb >> 16) & 0xFF) / 255,
-                green: CGFloat((rgb >> 8) & 0xFF) / 255,
-                blue: CGFloat(rgb & 0xFF) / 255,
-                alpha: 1
-            )
-        })
+        Color(UIColor { traits in uiColor(traits.userInterfaceStyle == .dark ? dark : light) })
+    }
+
+    private static func uiColor(_ rgb: Int) -> UIColor {
+        UIColor(
+            red: CGFloat((rgb >> 16) & 0xFF) / 255,
+            green: CGFloat((rgb >> 8) & 0xFF) / 255,
+            blue: CGFloat(rgb & 0xFF) / 255,
+            alpha: 1
+        )
+    }
+}
+
+private struct PaletteKey: EnvironmentKey {
+    static let defaultValue = Palette.system
+}
+
+extension EnvironmentValues {
+    var palette: Palette {
+        get { self[PaletteKey.self] }
+        set { self[PaletteKey.self] = newValue }
+    }
+}
+
+private struct WidgetStyleModifier: ViewModifier {
+    let style: WidgetSnapshot.Style
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if let scheme = Palette.colorScheme(for: style) {
+            content
+                .environment(\.palette, Palette.of(style))
+                .environment(\.colorScheme, scheme)
+        } else {
+            content.environment(\.palette, Palette.of(style))
+        }
+    }
+}
+
+extension View {
+    /// Draws a home-screen widget in the colours chosen in the app.
+    func widgetStyle(_ style: WidgetSnapshot.Style) -> some View {
+        modifier(WidgetStyleModifier(style: style))
     }
 }
 

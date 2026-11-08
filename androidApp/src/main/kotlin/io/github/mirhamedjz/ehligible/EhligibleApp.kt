@@ -47,6 +47,7 @@ class EhligibleApp : Application() {
             appInfo = AppInfo(
                 versionName = BuildConfig.VERSION_NAME,
                 backgroundLocationSupported = BuildConfig.BACKGROUND_LOCATION,
+                widgetOpacitySupported = true,
             ),
         )
     }

@@ -18,6 +18,7 @@ final class WidgetSnapshotTests: XCTestCase {
         let snapshot = try fixture()
         XCTAssertEqual(snapshot.generatedAt, 1_793_289_600_000)
         XCTAssertEqual(snapshot.target, .safer)
+        XCTAssertEqual(snapshot.style, .maple)
         XCTAssertEqual(snapshot.reviewDays, 2)
         XCTAssertEqual(snapshot.days.map(\.date), ["2026-10-29", "2026-10-30", "2026-10-31"])
         XCTAssertEqual(snapshot.days[0].daysLeft, 436)
@@ -30,6 +31,13 @@ final class WidgetSnapshotTests: XCTestCase {
         XCTAssertNil(snapshot.days[2].daysLeft)
         XCTAssertNil(snapshot.days[2].countdownDate)
         XCTAssertEqual(snapshot.days[2].status, .unknown)
+    }
+
+    func testOlderOrNewerStylesStillDecode() throws {
+        let base = #"{"generatedAt": 1, "reviewDays": 0, "target": "EXACT", "days": []"#
+        XCTAssertNil(try WidgetSnapshot.decode(Data((base + "}").utf8)).style)
+        let future = try WidgetSnapshot.decode(Data((base + #", "style": "NEON"}"#).utf8))
+        XCTAssertEqual(future.style, .system)
     }
 
     func testSchedulesEachDayFromItsMidnightThenRunsOut() throws {

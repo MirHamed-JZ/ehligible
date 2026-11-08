@@ -5,6 +5,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonObject
 
 /**
  * The iOS widget decodes the snapshot in Swift, so its JSON shape is a contract. The same fixture file is decoded
@@ -31,11 +33,18 @@ class WidgetSnapshotFixtureTest {
             WidgetDay(LocalDate(2026, 10, 30), 435, LocalDate(2028, 1, 8), 668, 0.6100, false, WidgetStatus.IN_CANADA),
             WidgetDay(LocalDate(2026, 10, 31), null, null, 668, 0.6100, false, WidgetStatus.UNKNOWN),
         ),
+        style = WidgetStyle.MAPLE,
     )
 
     @Test
     fun theFixtureDecodesToTheExpectedSnapshot() {
         assertEquals(expected, WidgetSnapshot.decode(fixture))
+    }
+
+    @Test
+    fun aSnapshotFromBeforeStylesUsesTheSystemOne() {
+        val withoutStyle = JsonObject(Json.parseToJsonElement(fixture).jsonObject - "style").toString()
+        assertEquals(WidgetStyle.SYSTEM, WidgetSnapshot.decode(withoutStyle).style)
     }
 
     @Test

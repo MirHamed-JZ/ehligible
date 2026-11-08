@@ -24,6 +24,8 @@ data class WidgetSnapshot(
     val reviewDays: Int = 0,
     val target: CountdownTarget,
     val days: List<WidgetDay>,
+    /** The colours chosen in Settings. */
+    val style: WidgetStyle = WidgetStyle.SYSTEM,
 ) {
     fun encode(): String = json.encodeToString(serializer(), this)
 
@@ -74,6 +76,7 @@ fun AppData.widgetSnapshot(
         generatedAt = now.toEpochMilliseconds(),
         reviewDays = current.reviewDays.size,
         target = current.target,
+        style = settings.widgetStyle,
         days = (0 until days).mapNotNull { offset ->
             if (offset == 0) return@mapNotNull current.toWidgetDay()
             // A later day is shown from its midnight on, so the status is judged from then: a check older than

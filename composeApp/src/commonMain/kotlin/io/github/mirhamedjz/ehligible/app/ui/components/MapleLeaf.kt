@@ -45,6 +45,15 @@ internal fun leafPath(origin: Offset, side: Float): Path = Path().apply {
     close()
 }
 
+/** The colours of [MapleLeafProgress]: the app's by default, the widget's in its Settings preview. */
+data class LeafColors(val fill: Color, val empty: Color, val track: Color, val done: Color)
+
+@Composable
+fun appLeafColors(): LeafColors {
+    val brand = Brand.colors
+    return LeafColors(brand.maple, brand.leafEmpty, MaterialTheme.colorScheme.surfaceVariant, brand.gold)
+}
+
 /**
  * A maple leaf that fills with red from the bottom as [progress] (0..1) grows, inside a countdown ring.
  * The fill line ripples gently; at 100 % the ring turns gold.
@@ -55,9 +64,8 @@ fun MapleLeafProgress(
     contentDescription: String,
     modifier: Modifier = Modifier,
     animate: Boolean = true,
+    colors: LeafColors = appLeafColors(),
 ) {
-    val brand = Brand.colors
-    val ringTrack = MaterialTheme.colorScheme.surfaceVariant
     val fill = remember { Animatable(if (animate) 0f else progress) }
     LaunchedEffect(progress) { fill.animateTo(progress.coerceIn(0f, 1f), tween(durationMillis = 1_400)) }
     val wave by rememberInfiniteTransition(label = "wave").animateFloat(
@@ -72,21 +80,21 @@ fun MapleLeafProgress(
         val ringStroke = side * 0.045f
         val ringRadius = side / 2 - ringStroke
         val done = fill.value >= 1f
-        drawRing(center, ringRadius, ringStroke, ringTrack, if (done) brand.gold else brand.maple, fill.value)
+        drawRing(center, ringRadius, ringStroke, colors.track, if (done) colors.done else colors.fill, fill.value)
 
         val leafSide = ringRadius * 1.45f
         val origin = Offset(center.x - leafSide / 2, center.y - leafSide * 0.52f)
         val leaf = leafPath(origin, leafSide)
         val joint = Stroke(width = side * LeafShape.JOIN_FRACTION, join = StrokeJoin.Round, cap = StrokeCap.Round)
         rotate(LEAF_TILT_DEGREES, center) {
-            drawPath(leaf, brand.leafEmpty)
-            drawPath(leaf, brand.leafEmpty, style = joint)
+            drawPath(leaf, colors.empty)
+            drawPath(leaf, colors.empty, style = joint)
             clipPath(leaf) {
-                drawWaterLine(origin, leafSide, fill.value, wave, brand.maple)
+                drawWaterLine(origin, leafSide, fill.value, wave, colors.fill)
             }
             if (fill.value > 0f) {
                 // Round the filled leaf's tips too, but only below the water line.
-                clipPath(waterBody(origin, leafSide, fill.value, wave)) { drawPath(leaf, brand.maple, style = joint) }
+                clipPath(waterBody(origin, leafSide, fill.value, wave)) { drawPath(leaf, colors.fill, style = joint) }
             }
         }
     }

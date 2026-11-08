@@ -78,8 +78,25 @@ class AppDataTest {
             ),
             trips = listOf(Trip("t", LocalDate(2025, 7, 1), LocalDate(2025, 7, 20), "Paris", "Vacation")),
             userVerdicts = mapOf(LocalDate(2026, 10, 30) to UserVerdict.PRESENT),
+            settings = Settings(widgetStyle = WidgetStyle.MAPLE, widgetOpacity = 40),
         ).recordCheck(Check(CheckKind.OUTSIDE, "US"), Instant.parse("2026-10-29T15:00:00Z"), montreal)
         assertEquals(data, AppDataJson.decode(AppDataJson.encode(data)))
+    }
+
+    @Test
+    fun filesFromBeforeWidgetStylesGetTheDefaults() {
+        val settings = AppDataJson.decode("""{"schemaVersion": 1, "settings": {"marginDays": 10}}""").settings
+        assertEquals(10, settings.marginDays)
+        assertEquals(WidgetStyle.SYSTEM, settings.widgetStyle)
+        assertEquals(Settings.MAX_WIDGET_OPACITY, settings.widgetOpacity)
+    }
+
+    @Test
+    fun anUnknownChoiceFallsBackToItsDefault() {
+        val text = """{"schemaVersion": 1, "settings": {"marginDays": 10, "widgetStyle": "NEON"}}"""
+        val settings = AppDataJson.decode(text).settings
+        assertEquals(WidgetStyle.SYSTEM, settings.widgetStyle)
+        assertEquals(10, settings.marginDays)
     }
 
     @Test

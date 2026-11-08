@@ -41,6 +41,8 @@ data class AppInfo(
     val versionName: String,
     /** False for the first Play release, which ships without background location (docs/SPEC.md). */
     val backgroundLocationSupported: Boolean,
+    /** Android widgets can be see-through; iOS draws its own opaque background behind every widget. */
+    val widgetOpacitySupported: Boolean,
 )
 
 /** App-wide services, created once per process by the platform entry point. */
