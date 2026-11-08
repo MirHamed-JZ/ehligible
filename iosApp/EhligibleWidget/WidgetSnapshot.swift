@@ -8,10 +8,25 @@ struct WidgetSnapshot: Codable, Equatable {
     var reviewDays: Int
     var target: Target
     var days: [Day]
+    /// The colours chosen in the app's Settings; missing in snapshots from before 1.0.2.
+    var style: Style?
 
     enum Target: String, Codable {
         case exact = "EXACT"
         case safer = "SAFER"
+    }
+
+    /// Kotlin's `WidgetStyle`.
+    enum Style: String, Codable {
+        case system = "SYSTEM"
+        case light = "LIGHT"
+        case dark = "DARK"
+        case maple = "MAPLE"
+
+        /// A style added in a later version of the app shows as `system` rather than breaking the widget.
+        init(from decoder: Decoder) throws {
+            self = Style(rawValue: try decoder.singleValueContainer().decode(String.self)) ?? .system
+        }
     }
 
     enum Status: String, Codable {

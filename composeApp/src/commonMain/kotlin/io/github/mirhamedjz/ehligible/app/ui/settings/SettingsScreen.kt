@@ -93,6 +93,7 @@ import io.github.mirhamedjz.ehligible.app.resources.settings_target_exact
 import io.github.mirhamedjz.ehligible.app.resources.settings_target_safer
 import io.github.mirhamedjz.ehligible.app.resources.settings_title
 import io.github.mirhamedjz.ehligible.app.resources.settings_version
+import io.github.mirhamedjz.ehligible.app.resources.settings_widget
 import io.github.mirhamedjz.ehligible.app.ui.AppUiState
 import io.github.mirhamedjz.ehligible.app.ui.AppViewModel
 import io.github.mirhamedjz.ehligible.app.ui.DateField
@@ -209,13 +210,6 @@ fun SettingsScreen(viewModel: AppViewModel, ready: AppUiState.Ready, onBack: () 
                     )
                 }
             }
-            if (pinWidget != null) {
-                item {
-                    OutlinedButton(onClick = pinWidget, modifier = Modifier.fillMaxWidth()) {
-                        Text(stringResource(Res.string.action_add_widget))
-                    }
-                }
-            }
             item {
                 SettingCard {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -272,6 +266,24 @@ fun SettingsScreen(viewModel: AppViewModel, ready: AppUiState.Ready, onBack: () 
                                 onClick = { showBackgroundDisclosure = true },
                                 modifier = Modifier.padding(top = 8.dp),
                             ) { Text(stringResource(Res.string.settings_background_turn_on)) }
+                        }
+                    }
+                }
+            }
+
+            item { SectionTitle(stringResource(Res.string.settings_widget)) }
+            item {
+                SettingCard {
+                    WidgetSettings(
+                        settings = settings,
+                        dashboard = ready.dashboard,
+                        opacitySupported = viewModel.appInfo.widgetOpacitySupported,
+                        onStyle = viewModel::setWidgetStyle,
+                        onOpacity = viewModel::setWidgetOpacity,
+                    )
+                    if (pinWidget != null) {
+                        OutlinedButton(onClick = pinWidget, modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
+                            Text(stringResource(Res.string.action_add_widget))
                         }
                     }
                 }

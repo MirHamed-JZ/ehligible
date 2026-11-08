@@ -8,6 +8,10 @@ object AppDataJson {
     private val json = Json {
         ignoreUnknownKeys = true
         encodeDefaults = true
+
+        // A choice this version doesn't know (say, a widget style added later, in a backup) falls back to its
+        // default instead of making the whole file unreadable.
+        coerceInputValues = true
     }
 
     fun encode(data: AppData): String = json.encodeToString(AppData.serializer(), data)

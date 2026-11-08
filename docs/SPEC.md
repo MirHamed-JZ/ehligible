@@ -93,8 +93,8 @@ neighbours become same-day / next-day trips. Destination = countries seen; reaso
 - **Journal**: past + detected + planned trips; add/edit/delete; export (text/CSV in IRCC's columns:
   departure, return, destination, reason, days absent).
 - **Review**: confirm days that need review.
-- **Checklist**, **Settings** (margin, widget target, notifications, backup export/import, profile edits,
-  about/disclaimer/privacy/licences incl. Natural Earth).
+- **Checklist**, **Settings** (margin, widget target, widget colours and background, notifications, backup
+  export/import, profile edits, about/disclaimer/privacy/licences incl. Natural Earth).
 
 ## Widgets
 
@@ -103,6 +103,9 @@ neighbours become same-day / next-day trips. Destination = countries seen; reaso
 - iOS (WidgetKit): small + medium home-screen, lock-screen circular + rectangular + inline. A widget can't
   run the rules, so the app writes a 14-day snapshot (`core/model/WidgetSnapshot.kt`) to the App Group
   container on every change; each day is projected like the home screen and carries its own status.
+- Look (Settings → Widget, since 1.0.2): colours Auto (light or dark like the phone), Light, Dark or Maple (red
+  with a white leaf), shared as `core/model/WidgetStyle.kt`; text and leaf colours follow the style so they stay
+  readable. Android adds a background opacity slider (0–100 %, 5 % steps); iOS widgets are always opaque.
 
 ## Notifications (opt-in)
 Milestones (25/50/75 %, 100/30/7/1 days left), "You're eligible today!", "Looks like you're travelling —

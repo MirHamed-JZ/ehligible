@@ -62,6 +62,13 @@ class WidgetSnapshotTest {
     }
 
     @Test
+    fun theSnapshotCarriesTheChosenStyle() {
+        assertEquals(WidgetStyle.SYSTEM, data.widgetSnapshot(today, now, zone)!!.style)
+        val maple = data.copy(settings = Settings(widgetStyle = WidgetStyle.MAPLE))
+        assertEquals(WidgetStyle.MAPLE, maple.widgetSnapshot(today, now, zone)!!.style)
+    }
+
+    @Test
     fun noSnapshotBeforeOnboarding() {
         assertNull(AppData().widgetSnapshot(today, now, zone))
     }

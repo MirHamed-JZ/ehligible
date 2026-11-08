@@ -63,7 +63,11 @@ object EhligibleIos {
                 host?.reloadWidgets()
             },
             notifier = IosNotifier,
-            appInfo = AppInfo(versionName = versionName(), backgroundLocationSupported = true),
+            appInfo = AppInfo(
+                versionName = versionName(),
+                backgroundLocationSupported = true,
+                widgetOpacitySupported = false,
+            ),
         )
     }
 

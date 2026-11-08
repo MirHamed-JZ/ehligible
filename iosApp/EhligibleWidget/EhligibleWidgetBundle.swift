@@ -12,7 +12,7 @@ struct CountdownWidget: Widget {
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: "CountdownWidget", provider: CountdownProvider()) { entry in
             CountdownWidgetView(entry: entry)
-                .containerBackground(for: .widget) { Palette.background }
+                .containerBackground(for: .widget) { Palette.of(entry.style).background }
         }
         .configurationDisplayName(Texts.localized("widget.name"))
         .description(Texts.localized("widget.description"))

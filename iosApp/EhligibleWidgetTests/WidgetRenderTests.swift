@@ -47,6 +47,13 @@ private struct WidgetSheet: View {
             tile(MediumView(entry: countdown(daysLeft: 0, celebrate: true, progress: 1)), width: 364)
             tile(MediumView(entry: countdown(status: .unknown)), width: 364, dark: true)
             HStack(spacing: 14) {
+                // The styles chosen in Settings; Light on a phone in dark mode must stay light.
+                tile(SmallView(entry: countdown()), width: 170, dark: true, style: .light)
+                tile(SmallView(entry: countdown()), width: 170, style: .dark)
+                tile(SmallView(entry: countdown()), width: 170, style: .maple)
+            }
+            tile(MediumView(entry: countdown(reviewDays: 2)), width: 364, style: .maple)
+            HStack(spacing: 14) {
                 CircularView(entry: countdown())
                     .frame(width: 76, height: 76)
                 RectangularView(entry: countdown())
@@ -91,12 +98,19 @@ private struct WidgetSheet: View {
         )
     }
 
-    /// A widget tile as on the home screen: the system's margins, background and corners.
-    private func tile<Content: View>(_ content: Content, width: CGFloat, dark: Bool = false) -> some View {
+    /// A widget tile as on the home screen (with `dark` the phone is in dark mode): the system's margins, the
+    /// chosen style's background and corners.
+    private func tile<Content: View>(
+        _ content: Content,
+        width: CGFloat,
+        dark: Bool = false,
+        style: WidgetSnapshot.Style = .system
+    ) -> some View {
         content
+            .widgetStyle(style)
             .padding(16)
             .frame(width: width, height: 170)
-            .background(Palette.background)
+            .background(Palette.of(style).background)
             .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
             .environment(\.colorScheme, dark ? .dark : .light)
     }

@@ -5,7 +5,6 @@ import android.content.res.Configuration
 import android.graphics.Bitmap
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -64,7 +63,10 @@ import io.github.mirhamedjz.ehligible.app.resources.widget_setup
 import io.github.mirhamedjz.ehligible.core.model.CountdownTarget
 import io.github.mirhamedjz.ehligible.core.model.CurrentStatus
 import io.github.mirhamedjz.ehligible.core.model.Dashboard
+import io.github.mirhamedjz.ehligible.core.model.Settings
+import io.github.mirhamedjz.ehligible.core.model.WidgetColors
 import io.github.mirhamedjz.ehligible.core.model.dashboard
+import io.github.mirhamedjz.ehligible.core.model.withOpacity
 import io.github.mirhamedjz.ehligible.core.rules.CitizenshipRules
 import kotlin.time.Clock
 import kotlinx.datetime.TimeZone
@@ -83,7 +85,18 @@ private data class WidgetState(
     val progress: Float,
     val leaf: Bitmap,
     val eligible: Boolean,
+    val look: WidgetLook,
 )
+
+/**
+ * The colours from Settings. Glance picks the day or night value itself when the phone switches modes; only the
+ * leaf bitmap is drawn for the mode at refresh time.
+ */
+private class WidgetLook(private val day: WidgetColors, private val night: WidgetColors, private val opacity: Int) {
+    fun color(pick: (WidgetColors) -> Long) = ColorProvider(Color(pick(day)), Color(pick(night)))
+
+    val background = color { it.background.withOpacity(opacity) }
+}
 
 class CountdownWidget : GlanceAppWidget() {
     override val sizeMode = SizeMode.Responsive(setOf(SMALL, WIDE, LARGE))
@@ -92,23 +105,29 @@ class CountdownWidget : GlanceAppWidget() {
         val app = context.applicationContext as EhligibleApp
         val now = Clock.System.now()
         val today = now.toLocalDateTime(TimeZone.currentSystemDefault()).date
-        val dashboard = app.graph.repository.current().dashboard(today, now)
-        val state = widgetState(context, dashboard)
+        val data = app.graph.repository.current()
+        val state = widgetState(context, data.dashboard(today, now), data.settings)
         provideContent { Content(state) }
     }
 
-    private suspend fun widgetState(context: Context, dashboard: Dashboard?): WidgetState {
+    private suspend fun widgetState(context: Context, dashboard: Dashboard?, settings: Settings): WidgetState {
         val night =
             (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
                 Configuration.UI_MODE_NIGHT_YES
+        val look = WidgetLook(
+            day = settings.widgetStyle.colors(night = false),
+            night = settings.widgetStyle.colors(night = true),
+            opacity = settings.widgetOpacity,
+        )
+        val colors = settings.widgetStyle.colors(night)
         val progress = dashboard?.progress ?: 0f
         val leaf = LeafBitmap.render(
             sizePx = 240,
             progress = progress,
-            filled = MAPLE.toArgb(),
-            empty = (if (night) LEAF_EMPTY_NIGHT else LEAF_EMPTY_DAY).toArgb(),
-            ring = (if (progress >= 1f) GOLD else MAPLE).toArgb(),
-            ringTrack = (if (night) TRACK_NIGHT else TRACK_DAY).toArgb(),
+            filled = colors.fill.toInt(),
+            empty = colors.leafEmpty.toInt(),
+            ring = (if (progress >= 1f) colors.done else colors.fill).toInt(),
+            ringTrack = colors.track.toInt(),
         )
         if (dashboard == null) {
             return WidgetState(
@@ -116,7 +135,7 @@ class CountdownWidget : GlanceAppWidget() {
                 getString(
                     Res.string.widget_setup,
                 ),
-                null, null, null, null, 0f, leaf, eligible = false,
+                null, null, null, null, 0f, leaf, eligible = false, look = look,
             )
         }
         val left = dashboard.daysLeft
@@ -170,6 +189,7 @@ class CountdownWidget : GlanceAppWidget() {
             progress = progress,
             leaf = leaf,
             eligible = eligible,
+            look = look,
         )
     }
 
@@ -179,7 +199,7 @@ class CountdownWidget : GlanceAppWidget() {
         Box(
             GlanceModifier.fillMaxSize().cornerRadius(
                 24.dp,
-            ).background(BACKGROUND).clickable(actionStartActivity<MainActivity>()).padding(12.dp),
+            ).background(state.look.background).clickable(actionStartActivity<MainActivity>()).padding(12.dp),
             contentAlignment = Alignment.Center,
         ) {
             when {
@@ -195,7 +215,7 @@ class CountdownWidget : GlanceAppWidget() {
         Column(horizontalAlignment = Alignment.CenterHorizontally, verticalAlignment = Alignment.CenterVertically) {
             Image(ImageProvider(state.leaf), contentDescription = null, modifier = GlanceModifier.size(76.dp))
             Number(state, 32)
-            Text(state.numberLabel, style = label(13), maxLines = 2)
+            Text(state.numberLabel, style = label(state, 13), maxLines = 2)
         }
     }
 
@@ -206,9 +226,11 @@ class CountdownWidget : GlanceAppWidget() {
             Spacer(GlanceModifier.width(12.dp))
             Column {
                 Number(state, 34)
-                Text(state.numberLabel, style = label(13), maxLines = 1)
-                state.dateLine?.let { Text(it, style = label(12), maxLines = 1) }
-                (state.reviewLine ?: state.statusLine)?.let { Text(it, style = label(11, ACCENT), maxLines = 1) }
+                Text(state.numberLabel, style = label(state, 13), maxLines = 1)
+                state.dateLine?.let { Text(it, style = label(state, 12), maxLines = 1) }
+                (state.reviewLine ?: state.statusLine)?.let {
+                    Text(it, style = label(state, 11, state.look.color(WidgetColors::accent)), maxLines = 1)
+                }
             }
         }
     }
@@ -222,11 +244,13 @@ class CountdownWidget : GlanceAppWidget() {
                 LinearProgressIndicator(
                     progress = state.progress,
                     modifier = GlanceModifier.fillMaxWidth().height(6.dp),
-                    color = ColorProvider(MAPLE, MAPLE),
-                    backgroundColor = ColorProvider(TRACK_DAY, TRACK_NIGHT),
+                    color = state.look.color(WidgetColors::fill),
+                    backgroundColor = state.look.color(WidgetColors::track),
                 )
-                state.countedLine?.let { Text(it, style = label(11), modifier = GlanceModifier.padding(top = 4.dp)) }
-                if (state.reviewLine != null) state.statusLine?.let { Text(it, style = label(11), maxLines = 1) }
+                state.countedLine?.let {
+                    Text(it, style = label(state, 11), modifier = GlanceModifier.padding(top = 4.dp))
+                }
+                if (state.reviewLine != null) state.statusLine?.let { Text(it, style = label(state, 11), maxLines = 1) }
             }
         }
     }
@@ -237,7 +261,7 @@ class CountdownWidget : GlanceAppWidget() {
             Text(
                 it,
                 style = TextStyle(
-                    color = ColorProvider(MAPLE, MAPLE_NIGHT),
+                    color = state.look.color(WidgetColors::number),
                     fontSize = sizeSp.sp,
                     fontWeight = FontWeight.Bold,
                 ),
@@ -245,24 +269,13 @@ class CountdownWidget : GlanceAppWidget() {
         }
     }
 
-    private fun label(sizeSp: Int, color: GlanceColor = INK) =
+    private fun label(state: WidgetState, sizeSp: Int, color: GlanceColor = state.look.color(WidgetColors::ink)) =
         TextStyle(color = color, fontSize = sizeSp.sp, textAlign = TextAlign.Start)
 
     companion object {
         private val SMALL = DpSize(110.dp, 110.dp)
         private val WIDE = DpSize(250.dp, 110.dp)
         private val LARGE = DpSize(250.dp, 190.dp)
-
-        private val MAPLE = Color(0xFFD62828)
-        private val MAPLE_NIGHT = Color(0xFFFF8A80)
-        private val GOLD = Color(0xFFF4A259)
-        private val LEAF_EMPTY_DAY = Color(0xFFF6DCD8)
-        private val LEAF_EMPTY_NIGHT = Color(0xFF3D2A2B)
-        private val TRACK_DAY = Color(0xFFF5DDDA)
-        private val TRACK_NIGHT = Color(0xFF534341)
-        private val BACKGROUND = ColorProvider(Color(0xFFFFF8F5), Color(0xFF1A1112))
-        private val INK = ColorProvider(Color(0xFF231917), Color(0xFFF1DEDC))
-        private val ACCENT = ColorProvider(Color(0xFF2F5DA8), Color(0xFFADC6FF))
 
         suspend fun refreshAll(context: Context) {
             CountdownWidget().updateAll(context)

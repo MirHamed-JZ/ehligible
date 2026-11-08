@@ -16,6 +16,7 @@ import io.github.mirhamedjz.ehligible.core.model.InvalidBackupException
 import io.github.mirhamedjz.ehligible.core.model.Milestone
 import io.github.mirhamedjz.ehligible.core.model.Profile
 import io.github.mirhamedjz.ehligible.core.model.Settings
+import io.github.mirhamedjz.ehligible.core.model.WidgetStyle
 import io.github.mirhamedjz.ehligible.core.model.dashboard
 import io.github.mirhamedjz.ehligible.core.model.nextCelebration
 import io.github.mirhamedjz.ehligible.core.presence.TimelineTrip
@@ -175,6 +176,11 @@ class AppViewModel(private val graph: AppGraph) : ViewModel() {
     fun setCountdownTarget(target: CountdownTarget) = updateSettings { it.copy(countdownTarget = target) }
 
     fun setNotifications(enabled: Boolean) = updateSettings { it.copy(notificationsEnabled = enabled) }
+
+    fun setWidgetStyle(style: WidgetStyle) = updateSettings { it.copy(widgetStyle = style) }
+
+    fun setWidgetOpacity(percent: Int) =
+        updateSettings { it.copy(widgetOpacity = percent.coerceIn(0, Settings.MAX_WIDGET_OPACITY)) }
 
     fun toggleChecklistItem(id: String) = updateSettings {
         it.copy(checklist = if (id in it.checklist) it.checklist - id else it.checklist + id)
