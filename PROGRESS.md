@@ -31,8 +31,8 @@ Checkpoint for resuming work (e.g., after a usage limit). Update at the end of e
       (reported 2026-11-08): no issues besides the two updates below.
 
 ## Current step
-Google Play closed test is **live** on "Closed testing - Alpha" (Canada): 1.0.0 (version code 1) approved and
-published 2026-11-03; **1.0.1 (version code 2) submitted 2026-11-04**, in review. 1.0.1 pins androidx.fragment
+Google Play closed test is **live** on "Closed testing - Alpha": 1.0.0 (version code 1) published 2026-11-03,
+1.0.1 (version code 2) published 2026-11-04, **1.0.2 (version code 3) in review since 2026-11-08**. 1.0.1 pins androidx.fragment
 1.9.1 because Play flagged the 1.0.0 one (1.1.0, pulled in by Play services) as an outdated SDK; signed files in
 `C:\DevProjects\ehligible-release\1.0.1\`. Play Console was set up 2026-10-31 by Claude in the owner's Chrome
 (package `ca.ehligible`), the owner approving each legal step. Opt-in link:
@@ -56,11 +56,10 @@ native debug symbols (DataStore's small native library; harmless).
    slowed animations on Trips and Settings, arrow and gesture.
    Also fixed while testing the signed build: a change made within ~45 s of a widget refresh (Glance's session)
    didn't reach the widget until the next refresh; the content now follows the saved data.
-3. **1.0.2 (version code 3)** signed 2026-11-08 from CI commit `a2666df`: `C:\DevProjects\ehligible-release\1.0.2\`
-   (README.txt there lists what changed and how it was tested). Android and iOS CI green. Next: upload it to
-   "Closed testing - Alpha" in Play Console, but **ask the owner before "Send changes for review"**. Three track
-   changes (Google Group testers, all countries) are already in review: in Publishing overview, check the
-   submission only adds 1.0.2 on top of them.
+3. **1.0.2 (version code 3) submitted for review 2026-11-08** (owner approved), files in
+   `C:\DevProjects\ehligible-release\1.0.2\` (built by CI from `a2666df`). Sending it restarted the review of the
+   tester/country changes (Google Group, all countries), so all four changes are now reviewed together (the
+   owner chose that over waiting). Next: when Play approves, testers get 1.0.2 automatically.
 4. ~~Testers setup~~ done 2026-11-08 (Google Group, all countries, recruiting posts in `tester-invite.md`); the
    owner recruits.
 5. Repo visibility: the owner asked whether the app repo should stay public (2026-11-08) and chose **public with
