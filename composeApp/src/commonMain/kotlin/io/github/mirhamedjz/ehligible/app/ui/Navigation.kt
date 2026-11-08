@@ -1,5 +1,13 @@
 package io.github.mirhamedjz.ehligible.app.ui
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -42,7 +50,18 @@ fun MainNavigation(viewModel: AppViewModel, initial: AppUiState.Ready) {
     val ready = state as? AppUiState.Ready ?: initial
     val back: () -> Unit = { nav.popBackStack() }
 
-    NavHost(nav, startDestination = HomeRoute) {
+    NavHost(
+        nav,
+        startDestination = HomeRoute,
+        enterTransition = { ForwardEnter },
+        exitTransition = { ForwardExit },
+        popEnterTransition = { BackEnter },
+        popExitTransition = { BackExit },
+        // The back gesture scrubs through the same animation as the back arrow (by default it shrinks the screen
+        // into a card instead, so going back looked different depending on how you did it).
+        predictivePopEnterTransition = { BackEnter },
+        predictivePopExitTransition = { BackExit },
+    ) {
         composable<HomeRoute> {
             HomeScreen(
                 ready = ready,
@@ -78,3 +97,17 @@ fun MainNavigation(viewModel: AppViewModel, initial: AppUiState.Ready) {
         composable<SettingsRoute> { SettingsScreen(viewModel, ready, onBack = back) }
     }
 }
+
+/**
+ * Every screen change is the same short slide and fade (Material's shared X axis): forward moves left, back moves
+ * right, whether by the back arrow or the back gesture. Screens slide a fifth of their width: a hint of direction,
+ * not a full push.
+ */
+private const val NAV_MILLIS = 300
+
+private fun <T> navSpec() = tween<T>(NAV_MILLIS, easing = FastOutSlowInEasing)
+
+private val ForwardEnter: EnterTransition = slideInHorizontally(navSpec()) { it / 5 } + fadeIn(navSpec())
+private val ForwardExit: ExitTransition = slideOutHorizontally(navSpec()) { -it / 5 } + fadeOut(navSpec())
+private val BackEnter: EnterTransition = slideInHorizontally(navSpec()) { -it / 5 } + fadeIn(navSpec())
+private val BackExit: ExitTransition = slideOutHorizontally(navSpec()) { it / 5 } + fadeOut(navSpec())
