@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use Eh-ligible or its code, please credit it as below and link to the repository."
+title: "Eh-ligible: countdown to Canadian citizenship"
+type: software
+authors:
+  - name: "The Eh-ligible authors"
+    website: "https://ehligible.github.io/"
+repository-code: "https://github.com/ehligible/ehligible"
+url: "https://ehligible.github.io/"
+license: Apache-2.0
+keywords:
+  - canadian citizenship
+  - physical presence
+  - kotlin multiplatform
+  - widget

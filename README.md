@@ -51,7 +51,12 @@ open iosApp/Ehligible.xcodeproj               # the build runs Gradle for the Ko
 Without a Mac, the `iOS` GitHub Actions workflow builds it, runs the Kotlin and widget tests on a simulator,
 launches the app and uploads screenshots.
 
-## License
+## License and credit
 
-[Apache License 2.0](LICENSE). The name "Eh-ligible" and its logo are not licensed for reuse.
-Border data: [Natural Earth](https://www.naturalearthdata.com/) (public domain).
+[Apache License 2.0](LICENSE). You may use and adapt the code, but you must **credit Eh-ligible**: keep the
+copyright notices and the [NOTICE](NOTICE) file in anything you share or publish that uses it, and link to
+<https://github.com/ehligible/ehligible>. To cite it, use **Cite this repository** on GitHub
+([CITATION.cff](CITATION.cff)).
+
+The name "Eh-ligible" and its logo are not licensed for reuse: an app built from this code needs its own name and
+icon. Border data: [Natural Earth](https://www.naturalearthdata.com/) (public domain).
