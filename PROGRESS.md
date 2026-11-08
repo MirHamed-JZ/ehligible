@@ -44,24 +44,25 @@ Account: trader status declared **non-trader** by the owner on 2026-11-04. The o
 name to "mirhamedjz" on 2026-11-04 (it was "Hamed JZ"). Play's remaining warning: no
 native debug symbols (DataStore's small native library; harmless).
 
-## Next updates (requested by the owner 2026-11-08; not started)
-1. **Widget opacity** (main ask), maybe a few background colours. Today `androidApp/.../widget/CountdownWidget.kt`
-   hard-codes `BACKGROUND = ColorProvider(day 0xFFFFF8F5, night 0xFF1A1112)` (white in light mode, dark in dark
-   mode, which the owner likes), with INK/ACCENT and the leaf colours (`LeafBitmap.kt`) following day/night.
-   Plan: a "Widget" section in Settings with a style (Match phone / Light / Dark, maybe a maple or blue tint)
-   and an opacity slider (0–100%), saved with the app's settings and applied with `updateAll`; text and leaf
-   colours follow the style so they stay readable when the background is see-through. iOS widgets can't be
-   transparent, so on iOS only the colour applies (hide the slider there).
-2. **Back animation is inconsistent.** Settings → back animates differently from Trips → back, and afterwards
-   Trips does it too. `composeApp/.../ui/Navigation.kt` uses NavHost's default transitions (700 ms crossfade).
-   On Android 14+ (targetSdk 36) the back gesture drives the pop transition (predictive back), while the top-bar
-   arrow plays the timed fade, so how you go back changes the animation. Plan: reproduce on the emulator with
-   gesture navigation (slow it down with `adb shell settings put global animator_duration_scale 10`), then set
-   explicit, matching enter/exit/popEnter/popExit transitions (e.g., a short horizontal slide + fade, ~300 ms)
-   so the arrow and the gesture look the same.
-3. Ship both as 1.0.2 (version code 3) on the closed track; ask the owner before sending it for review.
+## Next updates (requested by the owner 2026-11-08)
+1. ~~**Widget colours and opacity**~~ done 2026-11-08: Settings → Widget has a live preview, colours Auto / Light /
+   Dark / Maple (`core/model/WidgetStyle.kt`, shared by the Glance widget, the preview and, through the snapshot,
+   the iOS widget's Swift `Palette`) and on Android a background opacity slider (0–100 %, 5 % steps). Checked on
+   the emulator: Maple at 45 % shows the wallpaper through and stays readable. The iOS side is verified by the
+   `iOS` workflow (`widget-en.png` now has Light-in-dark-mode, Dark and Maple tiles).
+2. ~~**Back animation**~~ done 2026-11-08. Reproduced on the emulator: the arrow played NavHost's 700 ms crossfade,
+   the predictive back gesture shrank the screen into a card. Now every screen change is one 300 ms slide + fade
+   and the gesture scrubs the same one (`predictivePopEnter/ExitTransition` in `Navigation.kt`); checked with
+   slowed animations on Trips and Settings, arrow and gesture.
+3. **1.0.2 (version code 3)**: version and release notes committed (`72cea32`); next, sign the CI bundle into
+   `C:\DevProjects\ehligible-release\1.0.2\` and upload it to the closed track, but **ask the owner before
+   "Send changes for review"**. Three track changes (Google Group testers, all countries) are already in review:
+   in Publishing overview, check the submission only adds 1.0.2 on top of them.
 4. ~~Testers setup~~ done 2026-11-08 (Google Group, all countries, recruiting posts in `tester-invite.md`); the
    owner recruits.
+5. Repo visibility: the owner asked whether the app repo should stay public (2026-11-08) and chose **public with
+   credit required**: `NOTICE` (Apache-2.0 §4 makes redistributions keep it), `CITATION.cff` and the README's
+   "License and credit" section. The app's "Source code" link stays.
 
 ## Usage limits (owner asked to resume right after a reset)
 - Built-in `autoContinueAtUsageLimit` is on (~/.claude/settings.json); it resumes after a reset if this window
