@@ -105,9 +105,12 @@ the listing and release-note texts, and the `gradle.properties` lines to change.
 ## 5. Closed test (starts the 14-day clock)
 
 1. **Testing → Closed testing → Create track** (or use *Alpha*).
-2. **Testers:** create an email list (e.g., "Eh-ligible testers") with the Gmail addresses of **at least 12
-   people (aim for 15)** who have Android phones. Send them `docs/publishing/tester-invite.md`.
-3. **Countries:** Canada (add others if testers live elsewhere).
+2. **Testers:** **at least 12 people (aim for 15)** with Android phones. Since 2026-11-08 the track uses the
+   Google Group `ehligible-testers@googlegroups.com` (anyone can join at https://groups.google.com/g/ehligible-testers;
+   only the owner posts and sees members) instead of the first email list. Recruiting texts:
+   `docs/publishing/tester-invite.md`.
+3. **Countries:** all countries and "rest of world" since 2026-11-08 (Canada only before), so testers anywhere can
+   install. Changes to testers or countries go through review like releases.
 4. **Create release:**
    - Accept **Play App Signing** (Google keeps the app-signing key; you keep the upload key).
    - Upload the bundle. The **first upload must be manual**: `C:\DevProjects\ehligible-release\1.0.0\ehligible-1.0.0.aab`
@@ -118,8 +121,8 @@ the listing and release-note texts, and the `gradle.properties` lines to change.
    - Release notes: `distribution/whatsnew/whatsnew-en-US` and `whatsnew-fr-CA`.
 5. **Review and roll out.** Google approved and published the first release in 3 days (Oct 31 → Nov 3, 2026).
    The **opt-in link** (track → *Testers* → *Join on the web*) is https://play.google.com/apps/testing/ca.ehligible;
-   it only works for emails on the tester list. Each tester opens it, accepts, installs, and **stays opted in for
-   14 days in a row**.
+   it only works for members of the testers group. Each tester opens it, accepts, installs, and **stays opted in
+   for 14 days in a row**.
 6. **Updates** (testers get them automatically; the 14 days keep counting): raise `ehligible.versionName` and
    `ehligible.versionCode` in `gradle.properties`, write the notes in `distribution/whatsnew/` (and the same
    text in `androidApp/src/main/play/release-notes/`), push to `main`, sign the CI bundle as in step 4, and

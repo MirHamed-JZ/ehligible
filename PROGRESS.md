@@ -36,9 +36,10 @@ published 2026-11-03; **1.0.1 (version code 2) submitted 2026-11-04**, in review
 1.9.1 because Play flagged the 1.0.0 one (1.1.0, pulled in by Play services) as an outdated SDK; signed files in
 `C:\DevProjects\ehligible-release\1.0.1\`. Play Console was set up 2026-10-31 by Claude in the owner's Chrome
 (package `ca.ehligible`), the owner approving each legal step. Opt-in link:
-https://play.google.com/apps/testing/ca.ehligible (works only for emails on the "Eh-ligible testers" list, which
-has the owner's 2 addresses so far). Next: collect ~15 testers' emails, add them to the list, send message 2 of
-`docs/publishing/tester-invite.md`; after 14 days with at least 12 opted in, apply for production.
+https://play.google.com/apps/testing/ca.ehligible. Testers: since 2026-11-08 the Google Group
+`ehligible-testers@googlegroups.com` (anyone can join; the owner's 2 addresses are in) and all countries, sent for
+review that day. Recruiting texts: `docs/publishing/tester-invite.md`. After 14 days with at least 12 opted in,
+apply for production.
 Account: trader status declared **non-trader** by the owner on 2026-11-04. The owner changed the public developer
 name to "mirhamedjz" on 2026-11-04 (it was "Hamed JZ"). Play's remaining warning: no
 native debug symbols (DataStore's small native library; harmless).
@@ -59,9 +60,8 @@ native debug symbols (DataStore's small native library; harmless).
    explicit, matching enter/exit/popEnter/popExit transitions (e.g., a short horizontal slide + fade, ~300 ms)
    so the arrow and the gesture look the same.
 3. Ship both as 1.0.2 (version code 3) on the closed track; ask the owner before sending it for review.
-4. Testers: the owner hasn't found 12 yet. Suggested: switch the track's testers to a Google Group (people join
-   with one click, no emails to collect), open the closed track to more countries (now Canada only, so testers
-   abroad can't install), and recruit in tester-exchange communities and newcomer/PR groups.
+4. ~~Testers setup~~ done 2026-11-08 (Google Group, all countries, recruiting posts in `tester-invite.md`); the
+   owner recruits.
 
 ## Usage limits (owner asked to resume right after a reset)
 - Built-in `autoContinueAtUsageLimit` is on (~/.claude/settings.json); it resumes after a reset if this window
@@ -86,8 +86,8 @@ native debug symbols (DataStore's small native library; harmless).
 
 ## Waiting on the owner
 1. ~~Back up the upload key~~ (done) and ~~create the Play account and app~~ (done, verified 2026-10-31).
-2. Collect ~15 testers' emails (heads-up message), add them to the tester list (or send them to Claude), then
-   send the invitation with the opt-in link; 14 days with at least 12 opted in, then apply for production.
+2. Recruit testers with the texts in `docs/publishing/tester-invite.md` (friends, tester-exchange communities,
+   newcomer groups) and test back in the exchanges; 14 days with at least 12 opted in, then apply for production.
 3. Add the three signing secrets to `ehligible/ehligible` so tagged releases build signed bundles.
 4. When v1.1 ships: upload the declaration video to YouTube as Unlisted (script in `background-location.md`).
 5. Apple Developer account and a custom domain: later, if the owner decides.
