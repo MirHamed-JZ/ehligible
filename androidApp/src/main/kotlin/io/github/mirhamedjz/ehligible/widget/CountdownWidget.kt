@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -60,6 +62,7 @@ import io.github.mirhamedjz.ehligible.app.resources.status_near_border
 import io.github.mirhamedjz.ehligible.app.resources.status_paused
 import io.github.mirhamedjz.ehligible.app.resources.status_unknown
 import io.github.mirhamedjz.ehligible.app.resources.widget_setup
+import io.github.mirhamedjz.ehligible.core.model.AppData
 import io.github.mirhamedjz.ehligible.core.model.CountdownTarget
 import io.github.mirhamedjz.ehligible.core.model.CurrentStatus
 import io.github.mirhamedjz.ehligible.core.model.Dashboard
@@ -69,6 +72,8 @@ import io.github.mirhamedjz.ehligible.core.model.dashboard
 import io.github.mirhamedjz.ehligible.core.model.withOpacity
 import io.github.mirhamedjz.ehligible.core.rules.CitizenshipRules
 import kotlin.time.Clock
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.drop
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.getPluralString
@@ -102,12 +107,22 @@ class CountdownWidget : GlanceAppWidget() {
     override val sizeMode = SizeMode.Responsive(setOf(SMALL, WIDE, LARGE))
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        val app = context.applicationContext as EhligibleApp
+        val repository = (context.applicationContext as EhligibleApp).graph.repository
+        val initial = widgetState(context, repository.current())
+        provideContent {
+            // Glance keeps a session open for a while after drawing, and `updateAll` during it only recomposes:
+            // follow the saved data so a change made in the app shows right away, not after the next refresh.
+            val state by produceState(initial) {
+                repository.data.drop(1).collectLatest { value = widgetState(context, it) }
+            }
+            Content(state)
+        }
+    }
+
+    private suspend fun widgetState(context: Context, data: AppData): WidgetState {
         val now = Clock.System.now()
         val today = now.toLocalDateTime(TimeZone.currentSystemDefault()).date
-        val data = app.graph.repository.current()
-        val state = widgetState(context, data.dashboard(today, now), data.settings)
-        provideContent { Content(state) }
+        return widgetState(context, data.dashboard(today, now), data.settings)
     }
 
     private suspend fun widgetState(context: Context, dashboard: Dashboard?, settings: Settings): WidgetState {
