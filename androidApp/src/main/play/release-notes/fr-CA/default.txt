@@ -1,1 +1,1 @@
-Mise à jour d'entretien : des bibliothèques Android plus récentes. L'application fonctionne de la même façon.
+Nouveau : personnalisez le widget. Dans Paramètres → Widget, choisissez ses couleurs (Auto, Clair, Sombre ou Érable) et la transparence de son arrière-plan. Le retour entre les écrans s'anime maintenant de la même façon, avec la flèche ou le geste de retour.
