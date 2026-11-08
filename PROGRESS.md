@@ -56,10 +56,11 @@ native debug symbols (DataStore's small native library; harmless).
    slowed animations on Trips and Settings, arrow and gesture.
    Also fixed while testing the signed build: a change made within ~45 s of a widget refresh (Glance's session)
    didn't reach the widget until the next refresh; the content now follows the saved data.
-3. **1.0.2 (version code 3)**: version and release notes committed (`72cea32`); next, sign the CI bundle into
-   `C:\DevProjects\ehligible-release\1.0.2\` and upload it to the closed track, but **ask the owner before
-   "Send changes for review"**. Three track changes (Google Group testers, all countries) are already in review:
-   in Publishing overview, check the submission only adds 1.0.2 on top of them.
+3. **1.0.2 (version code 3)** signed 2026-11-08 from CI commit `a2666df`: `C:\DevProjects\ehligible-release.0.2\`
+   (README.txt there lists what changed and how it was tested). Android and iOS CI green. Next: upload it to
+   "Closed testing - Alpha" in Play Console, but **ask the owner before "Send changes for review"**. Three track
+   changes (Google Group testers, all countries) are already in review: in Publishing overview, check the
+   submission only adds 1.0.2 on top of them.
 4. ~~Testers setup~~ done 2026-11-08 (Google Group, all countries, recruiting posts in `tester-invite.md`); the
    owner recruits.
 5. Repo visibility: the owner asked whether the app repo should stay public (2026-11-08) and chose **public with
