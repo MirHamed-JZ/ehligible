@@ -27,7 +27,8 @@ Checkpoint for resuming work (e.g., after a usage limit). Update at the end of e
       Swift widget tests, app build, launch (onboarding) and the seeded home screen, same numbers as Android.
       The widget's look in every size, state and language is rendered by a test. All of it is in the
       `ios-screenshots` artifact of the `iOS` workflow (`widget/widget-en.png`, `widget-fr.png`).
-- [ ] M10 Real-device test on the owner's Android phone (needs the owner)
+- [x] M10 Real-device test — the owner installed the closed-test build from Google Play on their Android phone
+      (reported 2026-11-08): no issues besides the two updates below.
 
 ## Current step
 Google Play closed test is **live** on "Closed testing - Alpha" (Canada): 1.0.0 (version code 1) approved and
@@ -41,6 +42,26 @@ has the owner's 2 addresses so far). Next: collect ~15 testers' emails, add them
 Account: trader status declared **non-trader** by the owner on 2026-11-04. The owner changed the public developer
 name to "mirhamedjz" on 2026-11-04 (it was "Hamed JZ"). Play's remaining warning: no
 native debug symbols (DataStore's small native library; harmless).
+
+## Next updates (requested by the owner 2026-11-08; not started)
+1. **Widget opacity** (main ask), maybe a few background colours. Today `androidApp/.../widget/CountdownWidget.kt`
+   hard-codes `BACKGROUND = ColorProvider(day 0xFFFFF8F5, night 0xFF1A1112)` (white in light mode, dark in dark
+   mode, which the owner likes), with INK/ACCENT and the leaf colours (`LeafBitmap.kt`) following day/night.
+   Plan: a "Widget" section in Settings with a style (Match phone / Light / Dark, maybe a maple or blue tint)
+   and an opacity slider (0–100%), saved with the app's settings and applied with `updateAll`; text and leaf
+   colours follow the style so they stay readable when the background is see-through. iOS widgets can't be
+   transparent, so on iOS only the colour applies (hide the slider there).
+2. **Back animation is inconsistent.** Settings → back animates differently from Trips → back, and afterwards
+   Trips does it too. `composeApp/.../ui/Navigation.kt` uses NavHost's default transitions (700 ms crossfade).
+   On Android 14+ (targetSdk 36) the back gesture drives the pop transition (predictive back), while the top-bar
+   arrow plays the timed fade, so how you go back changes the animation. Plan: reproduce on the emulator with
+   gesture navigation (slow it down with `adb shell settings put global animator_duration_scale 10`), then set
+   explicit, matching enter/exit/popEnter/popExit transitions (e.g., a short horizontal slide + fade, ~300 ms)
+   so the arrow and the gesture look the same.
+3. Ship both as 1.0.2 (version code 3) on the closed track; ask the owner before sending it for review.
+4. Testers: the owner hasn't found 12 yet. Suggested: switch the track's testers to a Google Group (people join
+   with one click, no emails to collect), open the closed track to more countries (now Canada only, so testers
+   abroad can't install), and recruit in tester-exchange communities and newcomer/PR groups.
 
 ## Usage limits (owner asked to resume right after a reset)
 - Built-in `autoContinueAtUsageLimit` is on (~/.claude/settings.json); it resumes after a reset if this window
@@ -68,9 +89,8 @@ native debug symbols (DataStore's small native library; harmless).
 2. Collect ~15 testers' emails (heads-up message), add them to the tester list (or send them to Claude), then
    send the invitation with the opt-in link; 14 days with at least 12 opted in, then apply for production.
 3. Add the three signing secrets to `ehligible/ehligible` so tagged releases build signed bundles.
-4. Connect the Android phone with USB debugging (M10).
-5. When v1.1 ships: upload the declaration video to YouTube as Unlisted (script in `background-location.md`).
-6. Apple Developer account and a custom domain: later, if the owner decides.
+4. When v1.1 ships: upload the declaration video to YouTube as Unlisted (script in `background-location.md`).
+5. Apple Developer account and a custom domain: later, if the owner decides.
 
 ## Notes
 - Toolchain: JDK 17 (`C:\Users\mirha\dev\jdk17`), Android SDK `C:\Users\mirha\dev\android-sdk` (platform 36,
