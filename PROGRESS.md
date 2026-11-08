@@ -54,6 +54,8 @@ native debug symbols (DataStore's small native library; harmless).
    the predictive back gesture shrank the screen into a card. Now every screen change is one 300 ms slide + fade
    and the gesture scrubs the same one (`predictivePopEnter/ExitTransition` in `Navigation.kt`); checked with
    slowed animations on Trips and Settings, arrow and gesture.
+   Also fixed while testing the signed build: a change made within ~45 s of a widget refresh (Glance's session)
+   didn't reach the widget until the next refresh; the content now follows the saved data.
 3. **1.0.2 (version code 3)**: version and release notes committed (`72cea32`); next, sign the CI bundle into
    `C:\DevProjects\ehligible-release\1.0.2\` and upload it to the closed track, but **ask the owner before
    "Send changes for review"**. Three track changes (Google Group testers, all countries) are already in review:
